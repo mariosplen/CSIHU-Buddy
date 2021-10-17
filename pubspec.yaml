@@ -1,0 +1,27 @@
+name: csihu_buddy
+description: CSIHU-Buddy is a community app made to help with the accademic services of the Computer Science department of the International Hellenic University.
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  intl: ^0.17.0
+  http: ^0.13.4
+  html: ^0.15.0
+  timeago: ^3.1.0
+  flutter_html: ^2.1.5
+  google_fonts: ^2.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^1.0.0
+
+flutter:
+  uses-material-design: true
