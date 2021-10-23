@@ -38,6 +38,7 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
     String durtyTitle;
     String title;
     String contentHTML;
+    List<String> attachments;
 
     initializeDateFormatting('el');
     final format = DateFormat('d MMM yyyy HH:mm', 'el');
@@ -48,6 +49,12 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
           'https://cs.ihu.gr/view_announcement.xhtml?id=' + id.toString()));
       if (response.statusCode == 200) {
         var data = parse(response.body);
+        attachments = [];
+        data
+            .querySelectorAll('.col-sm-12 .ui-link.ui-widget')
+            .forEach((element) {
+          attachments.add(element.attributes['href'].toString());
+        });
         dirtyAuthorAndDate = data
             .querySelector('div#headerColumn > span')!
             .nodes
@@ -69,7 +76,7 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
             .toString();
         title = durtyTitle.substring(2, durtyTitle.length - 2).trim();
         contentHTML = data.querySelector('#j_idt33_editor')!.innerHtml;
-        //List<String> attachments = [];
+
         setState(() {
           announcementBuffer.add(Announcement(
             id: id.toString(),
@@ -77,6 +84,7 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
             author: authorAndDate[1],
             date: dateTime,
             content: contentHTML,
+            attachments: attachments,
           ));
         });
       }
@@ -106,9 +114,10 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
         child: Announcement.announcements.isEmpty
             ? Center(
                 child: IconButton(
-                onPressed: fetchLatest10,
-                icon: const Icon(Icons.refresh_rounded),
-              ))
+                  onPressed: fetchLatest10,
+                  icon: const Icon(Icons.refresh_rounded),
+                ),
+              )
             : ListView.builder(
                 itemCount: Announcement.announcements.length,
                 itemBuilder: (BuildContext context, int index) {
@@ -122,8 +131,8 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
                           builder: (context) {
                             // 10
                             return AnnouncementDetailPage(
-                                announcement:
-                                    Announcement.announcements[index]);
+                              announcement: Announcement.announcements[index],
+                            );
                           },
                         ),
                       );
